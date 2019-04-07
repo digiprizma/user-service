@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.digiprizma.entities.AppUser;
+import com.digiprizma.util.ConstantUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JWTAuthentificationFilter extends UsernamePasswordAuthenticationFilter {
@@ -53,8 +54,8 @@ public class JWTAuthentificationFilter extends UsernamePasswordAuthenticationFil
 
 		String jwt = JWT.create().withIssuer(request.getRequestURI()).withSubject(user.getUsername())
 				.withArrayClaim("roles", roles.toArray(new String[roles.size()]))
-				.withExpiresAt(new Date(System.currentTimeMillis() + 10 * 24 * 3600)).sign(Algorithm.HMAC256("digiprizma"));
-		response.addHeader("Authorization", jwt);
+				.withExpiresAt(new Date(System.currentTimeMillis() + ConstantUtil.EXPIRATION_DATE)).sign(Algorithm.HMAC256(ConstantUtil.SECRET));
+		response.addHeader(ConstantUtil.AUTHORIZATION, jwt);
 	}
 
 }
